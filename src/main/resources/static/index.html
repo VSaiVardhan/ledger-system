@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ledger System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-inner">
+        <h1 class="logo-text">Financial Ledger & Transaction Engine</h1>
+        <p class="header-sub">A double-entry accounting system</p>
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- ACCOUNT -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Create Account</h2>
+        </div>
+        <div class="field-group">
+            <label class="field-label">Account Name</label>
+            <input id="accName" placeholder="e.g. Cash, Revenue">
+        </div>
+        <div class="field-group">
+            <label class="field-label">Account Type</label>
+            <select id="accType">
+                <option>ASSET</option>
+                <option>INCOME</option>
+                <option>EXPENSE</option>
+                <option>LIABILITY</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" onclick="createAccount()">Create Account</button>
+
+        <div class="divider"></div>
+
+        <div class="section-label">Registered Accounts</div>
+        <button class="btn btn-ghost" onclick="loadAccounts()">Refresh List</button>
+        <ul id="accounts" class="data-list"></ul>
+    </div>
+
+    <!-- TRANSACTION -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Create Transaction</h2>
+        </div>
+        <div class="field-group">
+            <label class="field-label">Description</label>
+            <input id="desc" placeholder="Transaction description">
+        </div>
+        <div class="field-group">
+            <label class="field-label">Date</label>
+            <input id="date" placeholder="YYYY-MM-DD">
+        </div>
+
+        <div class="entries-row">
+            <div class="entry-block">
+                <div class="entry-badge">Entry 1</div>
+                <div class="field-group">
+                    <label class="field-label">Account ID</label>
+                    <input id="acc1" placeholder="ID">
+                </div>
+                <div class="field-group">
+                    <label class="field-label">Type</label>
+                    <select id="type1">
+                        <option>DEBIT</option>
+                        <option>CREDIT</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label class="field-label">Amount</label>
+                    <input id="amt1" placeholder="0.00">
+                </div>
+            </div>
+
+            <div class="entry-block">
+                <div class="entry-badge">Entry 2</div>
+                <div class="field-group">
+                    <label class="field-label">Account ID</label>
+                    <input id="acc2" placeholder="ID">
+                </div>
+                <div class="field-group">
+                    <label class="field-label">Type</label>
+                    <select id="type2">
+                        <option>DEBIT</option>
+                        <option>CREDIT</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label class="field-label">Amount</label>
+                    <input id="amt2" placeholder="0.00">
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="createTransaction()">Submit Transaction</button>
+    </div>
+
+    <!-- STATEMENT -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Account Statement</h2>
+        </div>
+        <div class="field-group">
+            <label class="field-label">Account ID</label>
+            <input id="stmtAccId" placeholder="Account ID">
+        </div>
+        <div class="date-range">
+            <div class="field-group">
+                <label class="field-label">From</label>
+                <input id="from" placeholder="YYYY-MM-DD">
+            </div>
+            <div class="field-group">
+                <label class="field-label">To</label>
+                <input id="to" placeholder="YYYY-MM-DD">
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="loadStatement()">Fetch Statement</button>
+        <ul id="statement" class="data-list"></ul>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Monthly Summary</h2>
+        </div>
+        <div class="field-group">
+            <label class="field-label">Account ID</label>
+            <input id="sumAccId" placeholder="Account ID">
+        </div>
+        <div class="date-range">
+            <div class="field-group">
+                <label class="field-label">Month</label>
+                <input id="month" placeholder="MM">
+            </div>
+            <div class="field-group">
+                <label class="field-label">Year</label>
+                <input id="year" placeholder="YYYY">
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="loadSummary()">Get Summary</button>
+        <pre id="summary" class="summary-output"></pre>
+    </div>
+
+    <!-- REVERSAL -->
+    <div class="card card-danger">
+        <div class="card-header">
+            <h2>Reverse Transaction</h2>
+        </div>
+        <p class="card-hint">This action creates a counter-entry and cannot be undone.</p>
+        <div class="field-group">
+            <label class="field-label">Transaction ID</label>
+            <input id="txnId" placeholder="Transaction ID">
+        </div>
+        <button class="btn btn-danger" onclick="reverseTransaction()">Reverse Transaction</button>
+    </div>
+
+</main>
+
+<footer class="site-footer">
+    <span>Vedulla Sai Vardhan</span>
+    <span class="footer-dot">·</span>
+    <span>IIIT Vadodara</span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
