@@ -4,13 +4,13 @@ import com.vardhan.ledger.dto.TransactionRequest;
 import com.vardhan.ledger.model.Transaction;
 import com.vardhan.ledger.service.TransactionService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Transactions", description = "Operations for creating and managing transactions")
@@ -23,6 +23,8 @@ public class TransactionController {
     public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
+
+    // ---------------- BASIC CRUD ----------------
 
     @PostMapping
     public String addTransaction(@Valid @RequestBody Transaction transaction) {
@@ -44,48 +46,46 @@ public class TransactionController {
         return transactionService.deleteTransaction(id);
     }
 
-    // @Operation(
-    //     summary = "Create double-entry transaction",
-    //     description = "Creates a transaction ensuring total debit equals total credit"
-    // )
-    // @PostMapping("/double")
-    // public String createDoubleEntry(@RequestBody TransactionRequest request) {
-    //     return transactionService.createDoubleEntryTransaction(request);
-    // }
+    // ---------------- DOUBLE ENTRY ----------------
 
-    @Operation(summary = "Create double-entry transaction")
-    @PostMapping("/double")
-    public String createDoubleEntry(
-        @RequestBody(
+    @Operation(
+        summary = "Create double-entry transaction",
+        description = "Creates a transaction with equal debit and credit entries",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Double-entry transaction request",
             required = true,
             content = @io.swagger.v3.oas.annotations.media.Content(
                 examples = @ExampleObject(
                     value = """
                     {
-                    "description": "Salary received",
-                    "date": "2026-04-04",
-                    "entries": [
+                      "description": "Salary received",
+                      "date": "2026-04-04",
+                      "entries": [
                         {
-                        "accountId": 1,
-                        "type": "DEBIT",
-                        "amount": 50000
+                          "accountId": 1,
+                          "type": "DEBIT",
+                          "amount": 50000
                         },
                         {
-                        "accountId": 2,
-                        "type": "CREDIT",
-                        "amount": 50000
+                          "accountId": 2,
+                          "type": "CREDIT",
+                          "amount": 50000
                         }
-                    ]
+                      ]
                     }
                     """
                 )
             )
         )
-        TransactionRequest request
+    )
+    @PostMapping("/double")
+    public String createDoubleEntry(
+            @RequestBody TransactionRequest request   // ✅ THIS IS SPRING REQUEST BODY
     ) {
         return transactionService.createDoubleEntryTransaction(request);
     }
+
+    // ---------------- REVERSAL ----------------
 
     @Operation(
         summary = "Reverse a transaction",
@@ -95,5 +95,4 @@ public class TransactionController {
     public String reverseTransaction(@PathVariable Long id) {
         return transactionService.reverseTransaction(id);
     }
-
 }
