@@ -210,4 +210,14 @@ public class TransactionService {
 
         return "Transaction reversed successfully!";
     }
+
+    public List<Entry> getEntriesByTransactionId(Long transactionId) {
+
+        // Check transaction exists
+        if (!transactionRepository.existsById(transactionId)) {
+            throw new ResourceNotFoundException("Transaction not found");
+        }
+
+        return entryRepository.findByTransactionId(transactionId);
+    }
 }

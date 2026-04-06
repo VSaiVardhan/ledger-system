@@ -1,10 +1,11 @@
 package com.vardhan.ledger.controller;
 
+import com.vardhan.ledger.model.Entry;
 import com.vardhan.ledger.dto.TransactionRequest;
 import com.vardhan.ledger.model.Transaction;
 import com.vardhan.ledger.service.TransactionService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -94,5 +95,12 @@ public class TransactionController {
     @PostMapping("/{id}/reverse")
     public String reverseTransaction(@PathVariable Long id) {
         return transactionService.reverseTransaction(id);
+    }
+
+    // ---------------- ENTRY RETRIEVAL ----------------
+    @Operation(summary = "Get all entries for a transaction")
+    @GetMapping("/{id}/entries")
+    public List<Entry> getTransactionEntries(@PathVariable Long id) {
+        return transactionService.getEntriesByTransactionId(id);
     }
 }

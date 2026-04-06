@@ -2,6 +2,12 @@ const BASE = "http://localhost:8080";
 
 // CREATE ACCOUNT
 function createAccount() {
+
+    if (!accName.value.trim()) {
+        alert("Account name is required");
+        return;
+    }
+
     fetch(BASE + "/accounts", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -29,6 +35,32 @@ function loadAccounts() {
 
 // CREATE TRANSACTION
 function createTransaction() {
+
+    if (!desc.value.trim() || !date.value) {
+        alert("Description and date are required");
+        return;
+    }
+
+    if (!acc1.value || !acc2.value || !amt1.value || !amt2.value) {
+        alert("All entry fields must be filled");
+        return;
+    }
+
+    if (isNaN(acc1.value) || isNaN(acc2.value)) {
+        alert("Account IDs must be numbers");
+        return;
+    }
+
+    if (isNaN(amt1.value) || isNaN(amt2.value)) {
+        alert("Amounts must be valid numbers");
+        return;
+    }
+
+    if (parseFloat(amt1.value) <= 0 || parseFloat(amt2.value) <= 0) {
+        alert("Amounts must be greater than 0");
+        return;
+    }
+
     fetch(BASE + "/transactions/double", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -82,7 +114,27 @@ function loadSummary() {
 
 // REVERSAL
 function reverseTransaction() {
+
+    if (!txnId.value || isNaN(txnId.value)) {
+        alert("Enter a valid Transaction ID");
+        return;
+    }
+
     fetch(BASE + `/transactions/${txnId.value}/reverse`, {
         method: "POST"
     }).then(() => alert("Reversed"));
+}
+
+// TRANSACTION ENTRIES
+function loadEntries() {
+    fetch(BASE + `/transactions/${entryTxnId.value}/entries`)
+        .then(res => res.json())
+        .then(data => {
+            entriesList.innerHTML = "";
+            data.forEach(e => {
+                let li = document.createElement("li");
+                li.innerText = `${e.account.name} | ${e.type} | ${e.amount} | ${e.transaction.createdAt}`;
+                entriesList.appendChild(li);
+            });
+        });
 }

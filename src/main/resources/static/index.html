@@ -64,16 +64,18 @@
         <div class="entries-row">
             <div class="entry-block">
                 <div class="entry-badge">Entry 1</div>
-                <div class="field-group">
-                    <label class="field-label">Account ID</label>
-                    <input id="acc1" placeholder="ID">
-                </div>
-                <div class="field-group">
-                    <label class="field-label">Type</label>
-                    <select id="type1">
-                        <option>DEBIT</option>
-                        <option>CREDIT</option>
-                    </select>
+                <div class="entry-inline">
+                    <div class="field-group">
+                        <label class="field-label">Account ID</label>
+                        <input id="acc1" placeholder="ID">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Type</label>
+                        <select id="type1">
+                            <option>DEBIT</option>
+                            <option>CREDIT</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="field-group">
                     <label class="field-label">Amount</label>
@@ -83,16 +85,18 @@
 
             <div class="entry-block">
                 <div class="entry-badge">Entry 2</div>
-                <div class="field-group">
-                    <label class="field-label">Account ID</label>
-                    <input id="acc2" placeholder="ID">
-                </div>
-                <div class="field-group">
-                    <label class="field-label">Type</label>
-                    <select id="type2">
-                        <option>DEBIT</option>
-                        <option>CREDIT</option>
-                    </select>
+                <div class="entry-inline">
+                    <div class="field-group">
+                        <label class="field-label">Account ID</label>
+                        <input id="acc2" placeholder="ID">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Type</label>
+                        <select id="type2">
+                            <option>DEBIT</option>
+                            <option>CREDIT</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="field-group">
                     <label class="field-label">Amount</label>
@@ -148,6 +152,19 @@
         </div>
         <button class="btn btn-primary" onclick="loadSummary()">Get Summary</button>
         <pre id="summary" class="summary-output"></pre>
+    </div>
+
+    <!-- TRANSACTION ENTRIES -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Transaction Entries</h2>
+        </div>
+        <div class="field-group">
+            <label class="field-label">Transaction ID</label>
+            <input id="entryTxnId" placeholder="Transaction ID">
+        </div>
+        <button class="btn btn-primary" onclick="loadEntries()">Load Entries</button>
+        <ul id="entriesList" class="data-list"></ul>
     </div>
 
     <!-- REVERSAL -->

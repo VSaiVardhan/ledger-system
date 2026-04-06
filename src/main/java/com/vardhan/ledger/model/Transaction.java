@@ -1,6 +1,8 @@
 package com.vardhan.ledger.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.PrePersist;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transactions")
@@ -15,6 +17,13 @@ public class Transaction {
 
     @Column(nullable = false)
     private String date;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     // Constructors
     public Transaction() {}
@@ -49,5 +58,13 @@ public class Transaction {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
