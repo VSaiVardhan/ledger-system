@@ -155,15 +155,12 @@ function loadSummary() {
         return;
     }
 
-    // Extract year and month
+    // extract from month picker
     let [yearVal, monthVal] = monthYear.value.split("-");
 
     fetch(BASE + `/accounts/${sumAccId.value}/summary?month=${monthVal}&year=${yearVal}`)
         .then(res => res.json())
         .then(data => {
-            console.log("Summary:", data);
-
-            //  Clean display instead of raw JSON
             summary.innerText = `
 Total Debit        : ₹${data.totalDebit}
 Total Credit       : ₹${data.totalCredit}
@@ -171,7 +168,7 @@ Net Balance Change : ₹${data.netBalanceChange}
             `;
         })
         .catch(err => {
-            console.error("Error:", err);
+            console.error(err);
             alert("Failed to load summary");
         });
 }
@@ -270,3 +267,13 @@ function loadEntriesByTransaction(txnId) {
         })
         .catch(err => console.error(err));
 }
+
+window.createAccount = createAccount;
+window.loadAccounts = loadAccounts;
+window.createTransaction = createTransaction;
+window.loadStatement = loadStatement;
+window.loadSummary = loadSummary;
+window.reverseTransaction = reverseTransaction;
+window.loadEntries = loadEntries;
+window.loadTransactions = loadTransactions;
+window.loadEntriesByTransaction = loadEntriesByTransaction;
