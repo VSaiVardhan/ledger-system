@@ -345,6 +345,17 @@ select option {
 
 .footer-dot { color: var(--accent); }
 
+input[type="date"],
+input[type="month"] {
+    color: #707070;
+}
+
+/* When user selects value → make it normal */
+input[type="date"]:valid,
+input[type="month"]:valid {
+    color: #e8e8e8;
+}
+
 /* ─── Responsive ─────────────────────────────────────────── */
 @media (max-width: 900px) {
     .container { grid-template-columns: 1fr; padding: 0 16px; }

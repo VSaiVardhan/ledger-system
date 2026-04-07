@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ledger System</title>
+    <title>Ledger System - VSaiVardhan</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -25,10 +25,12 @@
         <div class="card-header">
             <h2>Create Account</h2>
         </div>
+
         <div class="field-group">
             <label class="field-label">Account Name</label>
             <input id="accName" placeholder="e.g. Cash, Revenue">
         </div>
+
         <div class="field-group">
             <label class="field-label">Account Type</label>
             <select id="accType">
@@ -38,6 +40,12 @@
                 <option>LIABILITY</option>
             </select>
         </div>
+        <!-- INITIAL BALANCE -->
+        <div class="field-group">
+            <label class="field-label">Initial Balance (Optional)</label>
+            <input id="accBalance" type="number" placeholder="Default = 0">
+        </div>
+
         <button class="btn btn-primary" onclick="createAccount()">Create Account</button>
 
         <div class="divider"></div>
@@ -56,9 +64,13 @@
             <label class="field-label">Description</label>
             <input id="desc" placeholder="Transaction description">
         </div>
-        <div class="field-group">
+        <!-- <div class="field-group">
             <label class="field-label">Date</label>
             <input id="date" placeholder="YYYY-MM-DD">
+        </div> -->
+        <div class="field-group">
+                <label class="field-label">Date</label>
+                <input type="date" id="date" required>
         </div>
 
         <div class="entries-row">
@@ -113,21 +125,25 @@
         <div class="card-header">
             <h2>Account Statement</h2>
         </div>
+
         <div class="field-group">
             <label class="field-label">Account ID</label>
             <input id="stmtAccId" placeholder="Account ID">
         </div>
+
         <div class="date-range">
             <div class="field-group">
                 <label class="field-label">From</label>
-                <input id="from" placeholder="YYYY-MM-DD">
+                <input type="date" id="from" required>
             </div>
             <div class="field-group">
                 <label class="field-label">To</label>
-                <input id="to" placeholder="YYYY-MM-DD">
+                <input type="date" id="to" required>
             </div>
         </div>
+
         <button class="btn btn-primary" onclick="loadStatement()">Fetch Statement</button>
+
         <ul id="statement" class="data-list"></ul>
     </div>
 
@@ -136,34 +152,51 @@
         <div class="card-header">
             <h2>Monthly Summary</h2>
         </div>
+
         <div class="field-group">
             <label class="field-label">Account ID</label>
             <input id="sumAccId" placeholder="Account ID">
         </div>
-        <div class="date-range">
-            <div class="field-group">
-                <label class="field-label">Month</label>
-                <input id="month" placeholder="MM">
-            </div>
-            <div class="field-group">
-                <label class="field-label">Year</label>
-                <input id="year" placeholder="YYYY">
-            </div>
+
+        <div class="field-group">
+            <label class="field-label">Select Month</label>
+            <input type="month" id="monthYear" required>
         </div>
+
         <button class="btn btn-primary" onclick="loadSummary()">Get Summary</button>
+
         <pre id="summary" class="summary-output"></pre>
     </div>
 
-    <!-- TRANSACTION ENTRIES -->
+    <!-- TRANSACTION HISTORY + ENTRIES -->
     <div class="card">
         <div class="card-header">
-            <h2>Transaction Entries</h2>
+            <h2>Transaction Explorer</h2>
         </div>
+
+        <!-- FILTERS -->
         <div class="field-group">
-            <label class="field-label">Transaction ID</label>
-            <input id="entryTxnId" placeholder="Transaction ID">
+            <label class="field-label">From</label>
+            <input type="date" id="txnFrom" required>
         </div>
-        <button class="btn btn-primary" onclick="loadEntries()">Load Entries</button>
+
+        <div class="field-group">
+            <label class="field-label">To</label>
+            <input type="date" id="txnTo" required>
+        </div>
+
+        <button class="btn btn-primary" onclick="loadTransactions()">Load Transactions</button>
+
+        <div class="divider"></div>
+
+        <!-- TRANSACTIONS -->
+        <div class="section-label">Transactions</div>
+        <ul id="transactionsList" class="data-list"></ul>
+
+        <div class="divider"></div>
+
+        <!-- ENTRIES -->
+        <div class="section-label">Entries</div>
         <ul id="entriesList" class="data-list"></ul>
     </div>
 

@@ -3,8 +3,17 @@ const BASE = "https://ledger-system-df4y.onrender.com";
 // CREATE ACCOUNT 
 function createAccount() {
 
-    if(!accName.value.trim()) {
+    if (!accName.value.trim()) {
         alert("Account name is required");
+        return;
+    }
+
+    // Get balance from input
+    let balanceValue = accBalance.value;
+
+    // Validation (optional but recommended)
+    if (balanceValue && isNaN(balanceValue)) {
+        alert("Balance must be a valid number");
         return;
     }
 
@@ -14,13 +23,17 @@ function createAccount() {
         body: JSON.stringify({
             name: accName.value,
             type: accType.value,
-            balance: 0
+            balance: balanceValue ? parseFloat(balanceValue) : 0
         })
     })
     .then(res => res.json())
     .then(data => {
         console.log("Account created:", data);
         alert("Account created successfully!");
+
+        // Optional UX improvement
+        accName.value = "";
+        accBalance.value = "";
     })
     .catch(err => {
         console.error("Error:", err);
@@ -131,14 +144,35 @@ function loadStatement() {
 
 // SUMMARY
 function loadSummary() {
-    fetch(BASE + `/accounts/${sumAccId.value}/summary?month=${month.value}&year=${year.value}`)
+
+    if (!sumAccId.value || isNaN(sumAccId.value)) {
+        alert("Enter a valid Account ID");
+        return;
+    }
+
+    if (!monthYear.value) {
+        alert("Please select a month");
+        return;
+    }
+
+    // Extract year and month
+    let [yearVal, monthVal] = monthYear.value.split("-");
+
+    fetch(BASE + `/accounts/${sumAccId.value}/summary?month=${monthVal}&year=${yearVal}`)
         .then(res => res.json())
         .then(data => {
             console.log("Summary:", data);
-            summary.innerText = JSON.stringify(data, null, 2);
+
+            //  Clean display instead of raw JSON
+            summary.innerText = `
+Total Debit        : ₹${data.totalDebit}
+Total Credit       : ₹${data.totalCredit}
+Net Balance Change : ₹${data.netBalanceChange}
+            `;
         })
         .catch(err => {
-            console.error("Error loading summary:", err);
+            console.error("Error:", err);
+            alert("Failed to load summary");
         });
 }
 
@@ -180,4 +214,59 @@ function loadEntries() {
         .catch(err => {
             console.error("Error loading entries:", err);
         });
+}
+
+// TRANSACTION HISTORY
+function loadTransactions() {
+
+    let url = BASE + "/transactions";
+
+    // Apply date filter if present
+    if (txnFrom.value && txnTo.value) {
+        url += `?from=${txnFrom.value}&to=${txnTo.value}`;
+    }
+
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            console.log("Transactions:", data);
+
+            transactionsList.innerHTML = "";
+
+            data.forEach(t => {
+                let li = document.createElement("li");
+
+                li.innerText = `ID: ${t.id} | ${t.title} | ${t.date}`;
+
+                //  CLICKABLE
+                li.style.cursor = "pointer";
+
+                li.onclick = () => {
+                    loadEntriesByTransaction(t.id);
+                };
+
+                transactionsList.appendChild(li);
+            });
+        })
+        .catch(err => console.error(err));
+}
+
+function loadEntriesByTransaction(txnId) {
+
+    fetch(BASE + `/transactions/${txnId}/entries`)
+        .then(res => res.json())
+        .then(data => {
+            console.log("Entries:", data);
+
+            entriesList.innerHTML = "";
+
+            data.forEach(e => {
+                let li = document.createElement("li");
+
+                li.innerText = `${e.account.name} | ${e.type} | ${e.amount}`;
+
+                entriesList.appendChild(li);
+            });
+        })
+        .catch(err => console.error(err));
 }
