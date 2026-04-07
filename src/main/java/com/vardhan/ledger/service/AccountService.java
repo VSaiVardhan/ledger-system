@@ -1,21 +1,22 @@
 package com.vardhan.ledger.service;
 
 import com.vardhan.ledger.dto.StatementResponse;
+import com.vardhan.ledger.dto.SummaryResponse;
 import com.vardhan.ledger.exception.ResourceNotFoundException;
 import com.vardhan.ledger.model.Account;
-import com.vardhan.ledger.repository.AccountRepository;
-import org.springframework.stereotype.Service;
-import com.vardhan.ledger.repository.EntryRepository;
 import com.vardhan.ledger.model.Entry;
-import com.vardhan.ledger.dto.SummaryResponse;
 import com.vardhan.ledger.model.EntryType;
+import com.vardhan.ledger.repository.AccountRepository;
+import com.vardhan.ledger.repository.EntryRepository;
+
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 public class AccountService {
 
     private final AccountRepository accountRepository;
-
     private final EntryRepository entryRepository;
 
     public AccountService(AccountRepository accountRepository, EntryRepository entryRepository) {
@@ -24,6 +25,21 @@ public class AccountService {
     }
 
     public Account createAccount(Account account) {
+
+        // Validate required fields
+        if (account.getName() == null || account.getName().isBlank()) {
+            throw new IllegalArgumentException("Account name is required");
+        }
+
+        if (account.getType() == null) {
+            throw new IllegalArgumentException("Account type is required");
+        }
+
+        // Ensure balance is never null
+        if (account.getBalance() == null) {
+            account.setBalance(0.0);
+        }
+
         return accountRepository.save(account);
     }
 
