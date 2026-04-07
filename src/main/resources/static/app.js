@@ -1,4 +1,4 @@
-const BASE = "https://ledger-system-df4y.onrender.com/";
+const BASE = "https://ledger-system-df4y.onrender.com";
 
 // CREATE ACCOUNT
 function createAccount() {
@@ -16,7 +16,16 @@ function createAccount() {
             type: accType.value,
             balance: 0
         })
-    }).then(() => alert("Account created"));
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log("Account created:", data);
+        alert("Account created successfully!");
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        alert("Error creating account");
+    });
 }
 
 // LOAD ACCOUNTS
@@ -24,12 +33,16 @@ function loadAccounts() {
     fetch(BASE + "/accounts")
         .then(res => res.json())
         .then(data => {
+            console.log("Accounts:", data);
             accounts.innerHTML = "";
             data.forEach(a => {
                 let li = document.createElement("li");
                 li.innerText = `${a.id} | ${a.name} | ${a.balance}`;
                 accounts.appendChild(li);
             });
+        })
+        .catch(err => {
+            console.error("Error loading accounts:", err);
         });
 }
 
@@ -80,7 +93,16 @@ function createTransaction() {
                 }
             ]
         })
-    }).then(() => alert("Transaction created"));
+    })
+    .then(res => res.text())
+    .then(data => {
+        console.log("Transaction response:", data);
+        alert("Transaction created!");
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        alert("Error creating transaction");
+    });
 }
 
 // STATEMENT
@@ -94,12 +116,16 @@ function loadStatement() {
     fetch(url)
         .then(res => res.json())
         .then(data => {
+            console.log("Statement:", data);
             statement.innerHTML = "";
             data.forEach(e => {
                 let li = document.createElement("li");
                 li.innerText = `${e.date} | ${e.title} | ${e.type} | ${e.amount}`;
                 statement.appendChild(li);
             });
+        })
+        .catch(err => {
+            console.error("Error loading statement:", err);
         });
 }
 
@@ -108,7 +134,11 @@ function loadSummary() {
     fetch(BASE + `/accounts/${sumAccId.value}/summary?month=${month.value}&year=${year.value}`)
         .then(res => res.json())
         .then(data => {
+            console.log("Summary:", data);
             summary.innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+            console.error("Error loading summary:", err);
         });
 }
 
@@ -122,7 +152,16 @@ function reverseTransaction() {
 
     fetch(BASE + `/transactions/${txnId.value}/reverse`, {
         method: "POST"
-    }).then(() => alert("Reversed"));
+    })
+    .then(res => res.text())
+    .then(data => {
+        console.log("Reversal:", data);
+        alert("Transaction reversed!");
+    })
+    .catch(err => {
+        console.error("Error reversing:", err);
+        alert("Error reversing transaction");
+    });
 }
 
 // TRANSACTION ENTRIES
@@ -130,11 +169,15 @@ function loadEntries() {
     fetch(BASE + `/transactions/${entryTxnId.value}/entries`)
         .then(res => res.json())
         .then(data => {
+            console.log("Entries:", data);
             entriesList.innerHTML = "";
             data.forEach(e => {
                 let li = document.createElement("li");
                 li.innerText = `${e.account.name} | ${e.type} | ${e.amount} | ${e.transaction.createdAt}`;
                 entriesList.appendChild(li);
             });
+        })
+        .catch(err => {
+            console.error("Error loading entries:", err);
         });
 }
