@@ -1,9 +1,9 @@
 const BASE = "https://ledger-system-df4y.onrender.com";
 
-// CREATE ACCOUNT
+// CREATE ACCOUNT 
 function createAccount() {
 
-    if (!accName.value.trim()) {
+    if(!accName.value.trim()) {
         alert("Account name is required");
         return;
     }
