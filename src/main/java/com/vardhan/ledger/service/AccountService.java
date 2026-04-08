@@ -12,6 +12,7 @@ import com.vardhan.ledger.repository.EntryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class AccountService {
@@ -26,7 +27,6 @@ public class AccountService {
 
     public Account createAccount(Account account) {
 
-        // Validate required fields
         if (account.getName() == null || account.getName().isBlank()) {
             throw new IllegalArgumentException("Account name is required");
         }
@@ -35,7 +35,6 @@ public class AccountService {
             throw new IllegalArgumentException("Account type is required");
         }
 
-        // Ensure balance is never null
         if (account.getBalance() == null) {
             account.setBalance(0.0);
         }
@@ -60,19 +59,34 @@ public class AccountService {
         List<Entry> entries;
 
         if (from != null && to != null) {
-            entries = entryRepository.findByAccountIdAndTransaction_DateBetween(accountId, from, to);
+            entries = entryRepository
+                    .findByAccountIdAndTransaction_DateBetweenOrderByTransaction_DateAsc(accountId, from, to);
         } else {
-            entries = entryRepository.findByAccountId(accountId);
+            entries = entryRepository
+                    .findByAccountIdOrderByTransaction_DateAsc(accountId);
         }
 
-        return entries.stream()
-                .map(e -> new StatementResponse(
-                        e.getType(),
-                        e.getAmount(),
-                        e.getTransaction().getTitle(),
-                        e.getTransaction().getDate()
-                ))
-                .toList();
+        double runningBalance = 0.0;
+        List<StatementResponse> response = new ArrayList<>();
+
+        for (Entry e : entries) {
+
+            if (e.getType() == EntryType.DEBIT) {
+                runningBalance += e.getAmount();
+            } else {
+                runningBalance -= e.getAmount();
+            }
+
+            response.add(new StatementResponse(
+                    e.getType(),
+                    e.getAmount(),
+                    e.getTransaction().getTitle(),
+                    e.getTransaction().getDate(),
+                    runningBalance
+            ));
+        }
+
+        return response;
     }
 
     public SummaryResponse getMonthlySummary(Long accountId, String month, String year) {
@@ -81,11 +95,10 @@ public class AccountService {
             throw new ResourceNotFoundException("Account not found");
         }
 
-        // Format: YYYY-MM
         String yearMonth = year + "-" + month;
 
         List<Entry> entries = entryRepository
-                .findByAccountIdAndTransaction_DateStartingWith(accountId, yearMonth);
+                .findByAccountIdAndTransaction_DateStartingWithOrderByTransaction_DateAsc(accountId, yearMonth);
 
         double totalDebit = 0;
         double totalCredit = 0;

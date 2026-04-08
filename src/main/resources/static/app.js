@@ -131,9 +131,14 @@ function loadStatement() {
         .then(data => {
             console.log("Statement:", data);
             statement.innerHTML = "";
+
             data.forEach(e => {
                 let li = document.createElement("li");
-                li.innerText = `${e.date} | ${e.title} | ${e.type} | ${e.amount}`;
+
+                let sign = e.type === "DEBIT" ? "+" : "-";
+
+                li.innerText = `${e.date} | ${e.title} | ${sign}₹${e.amount} | Balance: ₹${e.balance}`;
+
                 statement.appendChild(li);
             });
         })
