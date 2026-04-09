@@ -118,7 +118,7 @@ CREATE DATABASE ledger_db;
 
 ### Configure Application Properties
 
-Update **src/main/resources/application.properties:**
+Update `src/main/resources/application.properties`:
 
 ```bash
 spring.datasource.url=jdbc:mysql://localhost:3306/ledger_db
