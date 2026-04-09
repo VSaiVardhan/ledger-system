@@ -88,6 +88,9 @@ This system follows **double-entry accounting**:
   ]
 }
 ```
+
+---
+
 ## How to Run the Project
 
 ### Prerequisites
@@ -115,7 +118,7 @@ CREATE DATABASE ledger_db;
 
 ### Configure Application Properties
 
-Update src/main/resources/application.properties:
+Update **src/main/resources/application.properties:**
 
 ```bash
 spring.datasource.url=jdbc:mysql://localhost:3306/ledger_db
@@ -137,6 +140,9 @@ mvn spring-boot:run
 - **Swagger UI:** http://localhost:8080/swagger-ui.html  
 - **Frontend UI:** http://localhost:8080/index.html
 
+> This project supports both local setup and cloud deployment. 
+
+---
 
 ## Project Structure
 
@@ -162,6 +168,8 @@ ledger-system/
 ### Architecture Pattern
 This project follows a layered architecture:
 Controller → Service → Repository → Database
+
+---
 
 ## Author
  
