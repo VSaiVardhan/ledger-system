@@ -1,4 +1,4 @@
-# Financial Ledger System
+# Financial Ledger & Transaction Engine
 
 A back-end focused **Financial Ledger & Double-Entry Transaction Engine**, with light-weight front-end, built using **Spring Boot and MySQL**, implementing core accounting principles like debit-credit balancing and running balance tracking.
 
